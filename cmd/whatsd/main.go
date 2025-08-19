@@ -7,8 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/medinatello/wapp-socket/internal/app"
 	"github.com/medinatello/wapp-socket/interface/http"
+	"github.com/medinatello/wapp-socket/internal/app"
 )
 
 func main() {

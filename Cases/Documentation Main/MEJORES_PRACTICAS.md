@@ -331,6 +331,14 @@ func (h *UserHandler) GetUser(c *gin.Context) {
 
 ## 🧪 Testing
 
+### Cobertura Mínima Requerida
+
+**Cobertura objetivo**:
+- Paquetes del dominio (`internal/domain`): **100%**
+- Servicios de aplicación (`internal/app`): **80%**
+- Adaptadores críticos (`internal/adapter`): **70%**
+- Casos de uso (`internal/usecase`): **80%**
+
 ### Tests Unitarios
 
 ```go
@@ -833,6 +841,95 @@ Para asegurar la calidad del proyecto y minimizar regresiones, se deben configur
 - [ ] ¿Se usan contexts para cancelación/timeout?
 - [ ] ¿Los logs son estructurados y útiles?
 - [ ] ¿Sigue los principios de Clean Architecture?
+
+## 📊 Estándares Específicos para wapp-socket
+
+### Patrones de Interfaces (Puertos y Adaptadores)
+
+```go
+// ✅ Correcto - Interfaces en el paquete outbound
+package outbound
+
+// Logger define interfaz estándar para logging estructurado
+type Logger interface {
+    Debug(msg string, args ...any)
+    Info(msg string, args ...any)
+    Warn(msg string, args ...any)
+    Error(msg string, err error, args ...any)
+}
+
+// WebSocketDialer define interfaz para conexiones WebSocket
+type WebSocketDialer interface {
+    Dial(ctx context.Context, url string) (WebSocketConn, error)
+}
+```
+
+### Adaptadores Fake para Testing
+
+**Obligatorio**: Todos los adaptadores externos deben tener implementaciones fake para testing:
+
+```go
+// ✅ Correcto - Adaptador fake con configuración
+type FakeWebSocketDialer struct {
+    logger            outbound.Logger
+    seed              int64
+    timeoutChance     float64
+    failChance        float64
+}
+
+func NewFakeWebSocketDialer(logger outbound.Logger, seed int64, timeoutChance, failChance float64, interval int) outbound.WebSocketDialer {
+    return &FakeWebSocketDialer{
+        logger:            logger,
+        seed:              seed,
+        timeoutChance:     timeoutChance,
+        failChance:        failChance,
+    }
+}
+```
+
+### Inyección de Dependencias
+
+**Patrón requerido**: Usar el patrón Container para inyección de dependencias:
+
+```go
+// ✅ Correcto - Container con todas las dependencias
+type Container struct {
+    Config    *Config
+    Logger    outbound.Logger
+    Telemetry telemetry.Telemetry
+    
+    // Use Cases
+    ConnectUseCase     *usecase.ConnectUseCase
+    SendMessageUseCase *usecase.SendMessageUseCase
+}
+
+func NewContainer() (*Container, error) {
+    // Inicialización de dependencias...
+    return container, nil
+}
+```
+
+### Métricas de Calidad Requeridas
+
+**Cobertura de tests mínima**:
+- **Dominio** (`internal/domain`): 100%
+- **Aplicación** (`internal/app`): 80%
+- **Casos de uso** (`internal/usecase`): 80%
+- **Adaptadores** (`internal/adapter`): 70%
+
+**Comandos de verificación**:
+```bash
+# Verificar cobertura por paquete
+go test -cover ./internal/domain
+go test -cover ./internal/app
+go test -cover ./internal/usecase
+
+# Verificar compilación sin errores
+go build ./...
+
+# Ejecutar linting
+golangci-lint run
+```
 
 ---
 

@@ -1,30 +1,85 @@
-# MVP_13 — Testing y Deployment
+# MVP-01 — Arquitectura Base y Esqueleto del Proyecto
 
-Este módulo corresponde al Sprint 13 y tiene como objetivo fortalecer las pruebas del proyecto y automatizar el deployment.
+Este módulo corresponde al Sprint 1 del proyecto wapp-socket y tiene como objetivo establecer la arquitectura base y el esqueleto funcional del sistema.
 
 ## Objetivos
 
-- Completar la suite de pruebas unitarias e integración, alcanzando al menos un 80 % de cobertura global.
-- Crear pruebas de API utilizando frameworks como Testify o GoConvey.
-- Desarrollar mocks para dependencias externas.
-- Preparar Dockerfiles optimizados y archivos de docker-compose para entornos de desarrollo.
-- Configurar una pipeline de CI/CD básica para build, tests, generación de imágenes Docker y despliegue.
+- Implementar la arquitectura hexagonal con puertos y adaptadores
+- Crear adaptadores fake para todas las dependencias externas (WebSocket, Storage, Crypto, etc.)
+- Establecer el patrón de inyección de dependencias con Container
+- Implementar la CLI básica con comandos principales (connect, send, stream, groups)
+- Configurar el sistema de logging estructurado con slog
+- Crear la base de telemetría con implementación no-op
 
 ## Versiones y Dependencias Clave
 
-- Go ≥ 1.20
-- Librerías de testing (`github.com/stretchr/testify`), frameworks de integración.
-- Docker y docker-compose.
+- Go 1.22
+- github.com/spf13/cobra v1.8.1 (CLI framework)
+- github.com/spf13/viper v1.20.1 (Configuración)
+- log/slog (Logging estructurado nativo)
+
+## Contexto del Proyecto
+
+wapp-socket es un cliente de WhatsApp implementado en Go que simula la funcionalidad de comunicación mediante WebSocket. El proyecto utiliza arquitectura limpia con implementaciones fake para el desarrollo inicial.
+
+### Estructura del Proyecto
+
+```
+wapp-socket/
+├── cmd/
+│   ├── whats-cli/     # CLI para interacción manual
+│   └── whatsd/        # Daemon para servicio en background
+├── internal/
+│   ├── domain/        # Entidades del dominio (Message, Session, JID)
+│   ├── app/           # Configuración y Container DI
+│   ├── usecase/       # Casos de uso (Connect, SendMessage, Receive, Groups)
+│   ├── port/          # Interfaces (puertos)
+│   │   ├── inbound/   # CommandBus, EventBus
+│   │   └── outbound/  # Logger, WebSocket, SessionStore, etc.
+│   └── adapter/       # Implementaciones (adaptadores)
+│       ├── ws/fake/   # WebSocket fake
+│       ├── store/fake/# Session store fake
+│       ├── log/slog/  # Logger con slog
+│       └── ...
+├── interface/
+│   ├── cli/           # Comandos CLI
+│   └── http/          # Servidor HTTP básico
+└── configs/           # Archivos de configuración
+```
 
 ## Criterios de Aceptación
 
-- La cobertura de pruebas supera el 80 % a nivel global.
-- Las pruebas de integración validan los endpoints principales.
-- Los Dockerfiles generan imágenes reproducibles y ligeras.
-- La pipeline de CI/CD construye, prueba y despliega la aplicación de forma automatizada.
-- La documentación y `resultado.md` están actualizadas.
+- ✅ Arquitectura hexagonal implementada con interfaces claras
+- ✅ Todos los adaptadores externos tienen implementaciones fake funcionales
+- ✅ CLI funcional con comandos básicos (connect, send, stream, groups)
+- ✅ Sistema de configuración flexible con Viper
+- ✅ Logging estructurado con slog
+- ✅ Container de DI implementado y funcional
+- ✅ Cobertura de tests: 100% en dominio, 80%+ en aplicación
+- ✅ Compilación sin errores y warnings
+
+## Características Implementadas
+
+### 1. Dominio del Negocio
+- **JID**: Identificadores de usuarios de WhatsApp
+- **Message**: Mensajes de texto y multimedia
+- **Session**: Estado de conexión
+- **Event**: Eventos del sistema (message_received, presence_update, etc.)
+
+### 2. Casos de Uso
+- **ConnectUseCase**: Manejo de conexiones WebSocket
+- **SendMessageUseCase**: Envío de mensajes
+- **ReceiveUseCase**: Recepción de eventos
+- **GroupsUseCase**: Manejo de grupos
+
+### 3. Adaptadores Fake
+- **FakeWebSocketDialer**: Simula conexiones WebSocket con probabilidades configurables
+- **FakeStore**: Almacenamiento en memoria para sesiones
+- **SlogLogger**: Logging estructurado
 
 ## Riesgos y Consideraciones
 
-- Complejidad de configurar CI/CD en entornos limitados.
-- Garantizar que los contenedores se comporten de forma similar al entorno de producción.
+- Los adaptadores fake no validan la lógica real de WhatsApp
+- La configuración permite modos de fallo para testing
+- El estado es volátil (no persistente) en implementaciones fake
+- Arquitectura preparada para migración a implementaciones reales

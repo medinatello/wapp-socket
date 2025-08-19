@@ -42,8 +42,8 @@ func (uc *ConnectUseCase) Execute(ctx context.Context) (outbound.WebSocketConn, 
 
 	// For the fake implementation, we'll just create a dummy session
 	session := &domain.Session{
-		ID:         "fake-session-id",
-		JID:        "1234567890@s.whatsapp.net",
+		ID:          "fake-session-id",
+		JID:         "1234567890@s.whatsapp.net",
 		IsConnected: true,
 	}
 

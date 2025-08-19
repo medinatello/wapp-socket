@@ -3,12 +3,7 @@ package app
 import (
 	"os"
 
-	"log/slog"
-
-	cryptofake "github.com/medinatello/wapp-socket/internal/adapter/crypto/fake"
 	slogadapter "github.com/medinatello/wapp-socket/internal/adapter/log/slog"
-	mediafake "github.com/medinatello/wapp-socket/internal/adapter/media/fake"
-	protofake "github.com/medinatello/wapp-socket/internal/adapter/proto/fake"
 	storefake "github.com/medinatello/wapp-socket/internal/adapter/store/fake"
 	wsfake "github.com/medinatello/wapp-socket/internal/adapter/ws/fake"
 	"github.com/medinatello/wapp-socket/internal/port/outbound"

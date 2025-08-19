@@ -15,7 +15,7 @@ func newConnectCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "connect",
 		Short: "Simulates connecting to the WhatsApp server.",
-		Long:  `Establishes a fake WebSocket connection, performs a handshake, and stores a session.
+		Long: `Establishes a fake WebSocket connection, performs a handshake, and stores a session.
 The outcome (success, timeout, failure) is determined by the configured probabilities and seed.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			container, err := initContainer()

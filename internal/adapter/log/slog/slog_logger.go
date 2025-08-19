@@ -1,7 +1,6 @@
 package slog
 
 import (
-	"context"
 	"io"
 	"log/slog"
 
@@ -24,22 +23,22 @@ func NewSlogLogger(w io.Writer, level slog.Leveler) *SlogLogger {
 }
 
 // Debug logs a message at the debug level.
-func (l *SlogLogger) Debug(msg string, args ...interface{}) {
+func (l *SlogLogger) Debug(msg string, args ...any) {
 	l.logger.Debug(msg, args...)
 }
 
 // Info logs a message at the info level.
-func (l *SlogLogger) Info(msg string, args ...interface{}) {
+func (l *SlogLogger) Info(msg string, args ...any) {
 	l.logger.Info(msg, args...)
 }
 
 // Warn logs a message at the warning level.
-func (l *SlogLogger) Warn(msg string, args ...interface{}) {
+func (l *SlogLogger) Warn(msg string, args ...any) {
 	l.logger.Warn(msg, args...)
 }
 
 // Error logs a message at the error level, including the error.
-func (l *SlogLogger) Error(msg string, err error, args ...interface{}) {
+func (l *SlogLogger) Error(msg string, err error, args ...any) {
 	// Combine the error and other args for structured logging.
 	allArgs := append(args, slog.String("error", err.Error()))
 	l.logger.Error(msg, allArgs...)
@@ -47,7 +46,7 @@ func (l *SlogLogger) Error(msg string, err error, args ...interface{}) {
 
 // The following methods are not part of the interface but are useful for slog.
 // With converts the logger to a structured logger with the given attributes.
-func (l *SlogLogger) With(args ...interface{}) outbound.Logger {
+func (l *SlogLogger) With(args ...any) outbound.Logger {
 	return &SlogLogger{
 		logger: l.logger.With(args...),
 	}

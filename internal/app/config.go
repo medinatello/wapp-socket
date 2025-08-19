@@ -22,11 +22,11 @@ type AppConfig struct {
 
 // FakesConfig holds settings for the fake adapters.
 type FakesConfig struct {
-	Seed                int64   `mapstructure:"seed"`
+	Seed                 int64   `mapstructure:"seed"`
 	ConnectTimeoutChance float64 `mapstructure:"connect_timeout_chance"`
-	ConnectFailChance   float64 `mapstructure:"connect_fail_chance"`
-	AckLatencyMs        int     `mapstructure:"ack_latency_ms"`
-	ReceiveIntervalMs   int     `mapstructure:"receive_interval_ms"`
+	ConnectFailChance    float64 `mapstructure:"connect_fail_chance"`
+	AckLatencyMs         int     `mapstructure:"ack_latency_ms"`
+	ReceiveIntervalMs    int     `mapstructure:"receive_interval_ms"`
 }
 
 // FeaturesConfig holds feature flags.

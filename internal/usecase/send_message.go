@@ -11,7 +11,7 @@ import (
 
 // SendMessageUseCase handles the logic for sending a text message.
 type SendMessageUseCase struct {
-	logger     outbound.Logger
+	logger outbound.Logger
 	// This is a simplification for Sprint 1. A better way is to get the conn from a shared manager.
 	connProvider func() outbound.WebSocketConn
 }
@@ -19,7 +19,7 @@ type SendMessageUseCase struct {
 // NewSendMessageUseCase creates a new SendMessageUseCase.
 func NewSendMessageUseCase(logger outbound.Logger, connProvider func() outbound.WebSocketConn) *SendMessageUseCase {
 	return &SendMessageUseCase{
-		logger:     logger,
+		logger:       logger,
 		connProvider: connProvider,
 	}
 }
