@@ -1,0 +1,86 @@
+# Configuración de ejemplo para wapp-socket
+# Copia este archivo como config.yaml y ajusta los valores según tus necesidades
+
+# Configuración de la aplicación
+app:
+  name: "wapp-socket"           # Nombre de la aplicación
+  log_level: "info"             # debug, info, warn, error
+
+# Configuración para adaptadores fake (desarrollo y testing)
+fakes:
+  seed: 0                       # 0 = aleatorio, cualquier otro número = reproducible
+  connect_timeout_chance: 0.2   # Probabilidad de timeout en conexión (0.0-1.0)
+  connect_fail_chance: 0.1      # Probabilidad de fallo en conexión (0.0-1.0)
+  ack_latency_ms: 100          # Latencia simulada para ACKs (milisegundos)
+  receive_interval_ms: 1000    # Intervalo entre eventos fake (milisegundos)
+
+# Flags de características
+features:
+  fake_mode: true              # true = usar adaptadores fake, false = usar reales
+  eventing_model: "bus"        # "bus" = usar event bus, "channels" = usar canales Go
+
+# Configuración de red (para implementaciones futuras)
+network:
+  websocket_url: "wss://web.whatsapp.com/ws"
+  connection_timeout: "30s"
+  read_timeout: "60s"
+  write_timeout: "30s"
+  max_reconnect_attempts: 5
+  reconnect_delay: "5s"
+
+# Configuración de base de datos (para implementaciones futuras)
+database:
+  path: "./data/sessions.db"
+  max_connections: 10
+  connection_timeout: "5s"
+
+# Configuración de logging avanzada
+logging:
+  format: "json"               # "json" o "text"
+  output: "stdout"             # "stdout", "stderr", o ruta de archivo
+  enable_caller: false         # Incluir información de archivo/línea
+  enable_stacktrace: false     # Incluir stack traces en errores
+
+# Configuración de telemetría
+telemetry:
+  enabled: false               # Habilitar telemetría
+  endpoint: ""                 # Endpoint para métricas
+  service_name: "wapp-socket"  # Nombre del servicio en métricas
+  environment: "development"   # Ambiente (development, staging, production)
+
+# Configuración del daemon HTTP
+daemon:
+  port: 8081                   # Puerto del servidor HTTP
+  host: "localhost"            # Host del servidor
+  enable_cors: true            # Habilitar CORS
+  enable_metrics: false        # Habilitar endpoint de métricas
+  health_check_path: "/health" # Ruta del health check
+
+# Configuración de la CLI
+cli:
+  default_output_format: "table" # "table", "json", "yaml"
+  enable_colors: true            # Habilitar colores en output
+  timeout: "30s"                 # Timeout por defecto para comandos
+
+# Límites y timeouts
+limits:
+  max_message_size: 65536       # Tamaño máximo de mensaje (bytes)
+  max_concurrent_connections: 1 # Número máximo de conexiones concurrentes
+  rate_limit_requests: 100      # Límite de requests por minuto
+  max_retry_attempts: 3         # Intentos máximos de reintento
+
+# Configuración de seguridad
+security:
+  enable_tls: true             # Habilitar TLS
+  tls_min_version: "1.2"       # Versión mínima de TLS
+  verify_certificates: true    # Verificar certificados SSL
+  allowed_origins: []          # Origins permitidos para CORS
+
+# Variables de entorno soportadas:
+# WAPP_APP_NAME
+# WAPP_APP_LOG_LEVEL
+# WAPP_FEATURES_FAKE_MODE
+# WAPP_FEATURES_EVENTING_MODEL
+# WAPP_DAEMON_PORT
+# WAPP_DATABASE_PATH
+# WAPP_NETWORK_WEBSOCKET_URL
