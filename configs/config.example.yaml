@@ -1,0 +1,19 @@
+# Example configuration for wapp-socket
+
+# App-specific settings
+app:
+  name: "wapp-socket"
+  log_level: "info" # debug, info, warn, error
+
+# Settings for fake adapters (used when FAKE_MODE is true)
+fakes:
+  seed: 0 # 0 for time-based, any other integer for reproducible randomness
+  connect_timeout_chance: 0.2 # 20%
+  connect_fail_chance: 0.1 # 10%
+  ack_latency_ms: 150
+  receive_interval_ms: 1000
+
+# Feature flags to enable/disable parts of the application
+features:
+  fake_mode: true
+  eventing_model: "bus" # "bus" or "chan"
